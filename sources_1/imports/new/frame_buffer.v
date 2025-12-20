@@ -615,12 +615,14 @@ module block_ram_frame_buffer2#(
                 initial begin
                     // $readmemh("black_mem.hex", mem); // For hexadecimal data
                     // $readmemh("white_mem.hex", mem);
-                    $readmemh("soft_purple.hex", mem);
+                    // $readmemh("soft_purple.hex", mem);
+                    $readmemh("black_mem_white.hex", mem);
                 end
             end
             else begin
                 initial begin
-                    $readmemh("white_mem.hex", mem); // For hexadecimal data
+                    // $readmemh("white_mem.hex", mem); // For hexadecimal data
+                    $readmemh("black_mem_white.hex", mem);
                 end
             end
         end

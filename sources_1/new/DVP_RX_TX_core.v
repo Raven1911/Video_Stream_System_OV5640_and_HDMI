@@ -18,8 +18,6 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-
-
 module DVP_RX_TX_core#(
     parameter DATA_WIDTH = 8,
     parameter ADDR_WIDTH_FIFO = 11,
@@ -30,7 +28,7 @@ module DVP_RX_TX_core#(
     parameter BRAM_NUMBER_BLOCK = 75,
     parameter BRAM_DEPTH_SIZE = 4096,
     parameter BRAM_MODE = 2,
-    parameter BRAM_ENB_TEST_PATTERN = 1
+    parameter BRAM_ENB_TEST_PATTERN = 0
 
 
 
@@ -187,7 +185,7 @@ module DVP_RX_TX_core#(
 
     control_frame_buffer_read_only #(
         .ADDR_WIDTH(BRAM_ADDR_WIDTH),
-        .READ_STROBE_PERIOD(6)
+        .READ_STROBE_PERIOD(1)
     ) control_read_frame_buffer (
         .clk_i(clk_i),  
         .resetn_i(resetn_i),

@@ -90,7 +90,7 @@ module control_frame_buffer_write_only#(
 
     // Điều kiện để ghi (tổ hợp)
     wire write_condition;
-    assign  write_condition = (empty_i == 0);
+    assign  write_condition = (empty_i == 0) ? 1'b1 : 1'b0;
     //================================================================
     // Khối Tổ hợp (Logic con trỏ Ghi)
     //================================================================
@@ -102,14 +102,14 @@ module control_frame_buffer_write_only#(
         
         // Mặc định cho đầu ra: Không ghi
         addr_wr_o_next = addr_wr_o_reg; // Giữ nguyên giá trị cũ
-        wr_o_next = 1'b0;
+        //wr_o_next = 1'b0;
         
         
         // --- Logic Ghi (Write) ---
         // Nếu Ghi được phép (đầu vào có data)
         if (write_condition == 1'b1) begin
             // Set tín hiệu Ghi cho chu kỳ TỚI
-            wr_o_next = 1'b1;
+            //wr_o_next = 1'b1;
             // Set địa chỉ Ghi cho chu kỳ TỚI (là địa chỉ của con trỏ HIỆN TẠI)
             addr_wr_o_next = count_pixel_wr_reg;
             
@@ -145,7 +145,7 @@ module control_frame_buffer_write_only#(
     
     // Gán các đầu ra đồng bộ
     assign addr_wr_o = addr_wr_o_reg;
-    assign wr_o = wr_o_reg;
+    assign wr_o = /* wr_o_reg */ write_condition;
     
     // Gán đầu ra cho cờ báo (đã được đăng ký)
     assign page_written_once_o = page_written_once_reg;

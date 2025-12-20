@@ -760,7 +760,7 @@ set_property -dict { PACKAGE_PIN R39 IOSTANDARD LVCMOS18 } [get_ports { cam_half
 set_property -dict { PACKAGE_PIN U37 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[3] }];    # U37   FMC2_HPC_LA17_CC_P
 set_property -dict { PACKAGE_PIN U38 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[2] }];    # U38   FMC2_HPC_LA17_CC_N
 
-# create_clock -add -name sys_clk_pin2  -period 5.00 -waveform {0 2.5} [get_ports cam_pclk_i];
+# create_clock -add -name sys_cam_pclk_pin  -period 20.00 -waveform {0 10.0} [get_ports cam_pclk_i];
 set_property -dict { PACKAGE_PIN U39 IOSTANDARD LVCMOS18 } [get_ports { cam_pclk_i }];   # U39   FMC2_HPC_CLK1_M2C_P
 # set_property -dict { PACKAGE_PIN T39 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_CLK1_M2C_N }];   # T39   FMC2_HPC_CLK1_M2C_N
 # set_property -dict { PACKAGE_PIN U36 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA18_CC_P }];    # U36   FMC2_HPC_LA18_CC_P
