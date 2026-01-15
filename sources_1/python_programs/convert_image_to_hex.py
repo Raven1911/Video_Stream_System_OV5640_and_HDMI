@@ -3,8 +3,8 @@ from PIL import Image
 
 # Cấu hình mặc định
 IMG_INPUT  = "input_image.jpg"
-HEX_FILE   = "image_data.hex"
-HEX_FILE_O   = "output_sim.hex"
+HEX_FILE   = "D:\\verilog_projects\\VIDEO_SYSTEM_HDL\\VIDEO_SYSTEM_HDL.srcs\\sources_1\\new\\image_data.hex"
+HEX_FILE_O   = "D:\\verilog_projects\\VIDEO_SYSTEM_HDL\\VIDEO_SYSTEM_HDL.sim\\sim_1\\behav\\xsim\\output_sim.hex"
 IMG_OUTPUT = "output_sim.png"
 WIDTH      = 640
 HEIGHT     = 480
