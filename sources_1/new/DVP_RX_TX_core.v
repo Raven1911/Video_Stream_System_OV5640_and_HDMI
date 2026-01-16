@@ -28,7 +28,10 @@ module DVP_RX_TX_core#(
     parameter BRAM_NUMBER_BLOCK = 75,
     parameter BRAM_DEPTH_SIZE = 4096,
     parameter BRAM_MODE = 2,
-    parameter BRAM_ENB_TEST_PATTERN = 0
+    parameter BRAM_ENB_TEST_PATTERN = 0,
+
+    parameter FIFO_DATA_WIDTH = 16,
+    parameter FIFO_DEPTH_WIDTH = 9
 
 
 
@@ -97,7 +100,7 @@ module DVP_RX_TX_core#(
     );
 
 
-    asyn_fifo #(.DATA_WIDTH(16),.FIFO_DEPTH_WIDTH(12)
+    asyn_fifo #(.DATA_WIDTH(FIFO_DATA_WIDTH),.FIFO_DEPTH_WIDTH(FIFO_DEPTH_WIDTH)
     ) fifo_camera(
 		.rst_n(resetn_i),
 		.clk_write(cam_pclk_i),
@@ -185,7 +188,8 @@ module DVP_RX_TX_core#(
 
     control_frame_buffer_read_only #(
         .ADDR_WIDTH(BRAM_ADDR_WIDTH),
-        .READ_STROBE_PERIOD(1)
+        .READ_STROBE_PERIOD(1),
+        .FIFO_DEPTH_WIDTH(FIFO_DEPTH_WIDTH)
     ) control_read_frame_buffer (
         .clk_i(clk_i),  
         .resetn_i(resetn_i),
@@ -195,6 +199,7 @@ module DVP_RX_TX_core#(
 
         .page_written_once_i(page_written_once_wire),
         .full_i(ctrl_full),
+        .data_count_w_i(data_count_w),
 
         .rd_o(ctrl_rd),
         .addr_rd_o(ctrl_addr_rd)
@@ -228,8 +233,10 @@ module DVP_RX_TX_core#(
 
     wire wr_fifo_hdmi;
     assign wr_fifo_hdmi = /* ctrl_rd | */ ctrl2fifo_rd;
+    
+    wire [FIFO_DEPTH_WIDTH-1:0] data_count_w;
 
-    asyn_fifo #(.DATA_WIDTH(16),.FIFO_DEPTH_WIDTH(12)
+    asyn_fifo #(.DATA_WIDTH(FIFO_DATA_WIDTH),.FIFO_DEPTH_WIDTH(FIFO_DEPTH_WIDTH)
     ) fifo_hdmi(
 		.rst_n(resetn_i),
 		.clk_write(clk_i),
@@ -240,6 +247,7 @@ module DVP_RX_TX_core#(
 		.data_read(rgb565_wire), //output TO read clock domain
 		.full(ctrl_full),
 		.empty(fifo_hdmi_empty), //full=sync to write domain clk , empty=sync to read domain clk
+        .data_count_w(data_count_w),
 		.data_count_r() //asserted if fifo is equal or more than than half of its max capacity
     );
 
@@ -269,7 +277,7 @@ module DVP_RX_TX_core#(
         .clock25(clk25MHz_i),
         .clock50(clk50MHz_i),
         .resetn(resetn_i),
-        .fifo_data_in(rgb565_wire), // SỬA: Kết nối trực tiếp với thanh ghi trễ
+        .fifo_data_in(rgb565_wire), 
         .empty_fifo(fifo_hdmi_empty),
         .hsync(hsync),
         .vsync(vsync),

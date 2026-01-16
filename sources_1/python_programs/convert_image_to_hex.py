@@ -2,7 +2,7 @@ import os
 from PIL import Image
 
 # Cấu hình mặc định
-IMG_INPUT  = "input_image.jpg"
+IMG_INPUT  = "input_image.png"
 HEX_FILE   = "D:\\verilog_projects\\VIDEO_SYSTEM_HDL\\VIDEO_SYSTEM_HDL.srcs\\sources_1\\new\\image_data.hex"
 HEX_FILE_O   = "D:\\verilog_projects\\VIDEO_SYSTEM_HDL\\VIDEO_SYSTEM_HDL.sim\\sim_1\\behav\\xsim\\output_sim.hex"
 IMG_OUTPUT = "output_sim.png"
