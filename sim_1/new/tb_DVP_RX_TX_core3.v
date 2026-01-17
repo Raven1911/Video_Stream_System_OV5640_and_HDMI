@@ -27,7 +27,7 @@ module tb_DVP_RX_TX_core3;
     parameter DATA_WIDTH        = 8;
     parameter TEST_WIDTH        = 640;
     parameter TEST_HEIGHT       = 480; 
-    parameter FRAMES_TO_SEND    = 4; // Lưu ý: Chỉ cần frame cuối cùng để convert ảnh cho đỡ nặng file
+    parameter FRAMES_TO_SEND    = 8; // Lưu ý: Chỉ cần frame cuối cùng để convert ảnh cho đỡ nặng file
 
     //================================================================
     // Thêm bộ nhớ và File Handling
@@ -94,7 +94,7 @@ module tb_DVP_RX_TX_core3;
             $display(">>> He thong da xuat xong Frame dau ra thu: %0d", out_frame_cnt);
             
             // Nếu là Frame thứ 11, bắt đầu cho phép ghi
-            if (out_frame_cnt == 5/* FRAMES_TO_SEND + 2 */) begin
+            if (out_frame_cnt == FRAMES_TO_SEND + 2) begin
                 capturing = 1;
                 $display(">>> BAT DAU ghi Frame vao file output_sim.hex...");
             end else begin

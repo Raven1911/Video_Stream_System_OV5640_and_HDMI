@@ -100,6 +100,8 @@ module DVP_RX_TX_core#(
     );
 
 
+    wire [FIFO_DEPTH_WIDTH-1:0] data_count_r;
+
     asyn_fifo #(.DATA_WIDTH(FIFO_DATA_WIDTH),.FIFO_DEPTH_WIDTH(FIFO_DEPTH_WIDTH)
     ) fifo_camera(
 		.rst_n(resetn_i),
@@ -109,9 +111,10 @@ module DVP_RX_TX_core#(
 		.read(ctrl_wr), 
 		.data_write(pixel_data_o), //input FROM write clock domain
 		.data_read(ctrl_data_i), //output TO read clock domain
-		.full(),
+		//.full(),
 		.empty(ctrl_empty), //full=sync to write domain clk , empty=sync to read domain clk
-		.data_count_r() //asserted if fifo is equal or more than than half of its max capacity
+        //.data_count_w(),
+		.data_count_r(data_count_r)
     );
 
     // fifo_dvp_unit#(
@@ -143,17 +146,17 @@ module DVP_RX_TX_core#(
         .resetn_i (resetn_i),
 
         .wr0_i    (ctrl_wr),
-        .wr1_i    (),
+        //.wr1_i    (),
 
         .addr_wr0 (ctrl_addr_wr),
-        .addr_wr1 (),
+        //.addr_wr1 (),
         .addr_rd0 (ctrl_addr_rd),
-        .addr_rd1 (),
+        //.addr_rd1 (),
 
         .Data_in0 (ctrl_data_i),
-        .Data_in1 (),
-        .Data_out0(ctrl_data_o),
-        .Data_out1()
+        //.Data_in1 (),
+        .Data_out0(ctrl_data_o)//,
+        //.Data_out1()
     );
 
     wire ctrl_empty;
@@ -171,7 +174,8 @@ module DVP_RX_TX_core#(
 
     wire page_written_once_wire;
     control_frame_buffer_write_only #(
-        .ADDR_WIDTH(BRAM_ADDR_WIDTH)
+        .ADDR_WIDTH(BRAM_ADDR_WIDTH),
+        .FIFO_DEPTH_WIDTH(FIFO_DEPTH_WIDTH)
     ) control_write_frame_buffer (
         .clk_i(clk_i),
         .resetn_i(resetn_i),
@@ -179,7 +183,8 @@ module DVP_RX_TX_core#(
         .resolution_width_i(resolution_width_i),
         .resolution_depth_i(resolution_depth_i),
 
-        .empty_i(ctrl_empty /* 0 */), 
+        .empty_i(ctrl_empty),
+        .data_count_r_i(data_count_r),
 
         .wr_o(ctrl_wr),
         .addr_wr_o(ctrl_addr_wr),
@@ -247,8 +252,8 @@ module DVP_RX_TX_core#(
 		.data_read(rgb565_wire), //output TO read clock domain
 		.full(ctrl_full),
 		.empty(fifo_hdmi_empty), //full=sync to write domain clk , empty=sync to read domain clk
-        .data_count_w(data_count_w),
-		.data_count_r() //asserted if fifo is equal or more than than half of its max capacity
+        .data_count_w(data_count_w)//,
+		//.data_count_r() //asserted if fifo is equal or more than than half of its max capacity
     );
 
 
