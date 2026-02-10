@@ -42,6 +42,7 @@ module Top_DVP#(
     input   [DATA_WIDTH-1:0]        cam_half_pixel_i, // Incoming 8-bit pixel data
     input                           cam_href,   // Horizontal Enable
     input                           cam_vsync,  // Vertical Sync
+    output                          cam_xclk_o,   // Camera external clock output
 
 
     output                          HDMI_TX_HS,        // Horizontal Sync
@@ -63,6 +64,7 @@ module Top_DVP#(
         .clk_out200MHz(clk_200MHz),
         .clk_out50MHz(clk_50MHz),
         .clk_out25MHz(clk_25MHz),
+        .clk_out24MHz(cam_xclk_o),
         // Status and control signals
         .resetn(resetn_i),
         .locked(locked),

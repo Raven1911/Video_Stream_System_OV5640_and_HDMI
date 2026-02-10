@@ -47,7 +47,7 @@ module DVP_RX_TX_core#(
     input   [DATA_WIDTH-1:0]        cam_half_pixel_i, // Incoming 8-bit pixel data
     input                           cam_href,   // Horizontal Enable
     input                           cam_vsync,  // Vertical Sync
-
+    
 
     output                          hsync,        // Horizontal Sync
     output                          vsync,        // Vertical Sync

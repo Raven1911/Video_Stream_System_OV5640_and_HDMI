@@ -195,7 +195,7 @@ module control_frame_buffer_read_only#(
     parameter FIFO_DEPTH_WIDTH = 9,
     // Các ngưỡng điều khiển FIFO
     parameter THRESHOLD_HIGH = 500,
-    parameter THRESHOLD_LOW  = 400
+    parameter THRESHOLD_LOW  = 499
 )(
     input                               clk_i,
     input                               resetn_i,

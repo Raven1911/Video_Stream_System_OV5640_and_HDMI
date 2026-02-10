@@ -667,13 +667,13 @@ set_property -dict { PACKAGE_PIN AV30 IOSTANDARD LVCMOS18 } [get_ports { resetn_
 
 # set_property -dict { PACKAGE_PIN AB41 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA10_P }];      # AB41  FMC2_HPC_LA10_P
 # set_property -dict { PACKAGE_PIN AB42 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA10_N }];      # AB42  FMC2_HPC_LA10_N
-set_property -dict { PACKAGE_PIN W40  IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[7] }];      # W40   FMC2_HPC_LA13_P
-set_property -dict { PACKAGE_PIN Y40  IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[6] }];      # Y40   FMC2_HPC_LA13_N
+# set_property -dict { PACKAGE_PIN W40  IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[7] }];      # W40   FMC2_HPC_LA13_P
+# set_property -dict { PACKAGE_PIN Y40  IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[6] }];      # Y40   FMC2_HPC_LA13_N
 
-# set_property -dict { PACKAGE_PIN Y39  IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA12_P }];      # Y39   FMC2_HPC_LA12_P
-# set_property -dict { PACKAGE_PIN AA39 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA12_N }];      # AA39  FMC2_HPC_LA12_N
-# set_property -dict { PACKAGE_PIN Y42  IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA11_P }];      # Y42   FMC2_HPC_LA11_P
-# set_property -dict { PACKAGE_PIN AA42 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA11_N }];      # AA42  FMC2_HPC_LA11_N
+set_property -dict { PACKAGE_PIN Y39  IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[1] }];      # Y39   FMC2_HPC_LA12_P
+set_property -dict { PACKAGE_PIN AA39 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[0] }];      # AA39  FMC2_HPC_LA12_N
+set_property -dict { PACKAGE_PIN Y42  IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[7] }];      # Y42   FMC2_HPC_LA11_P
+set_property -dict { PACKAGE_PIN AA42 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[6] }];      # AA42  FMC2_HPC_LA11_N
 
 # set_property -dict { PACKAGE_PIN AB38 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA14_P }];      # AB38  FMC2_HPC_LA14_P
 # set_property -dict { PACKAGE_PIN AB39 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA14_N }];      # AB39  FMC2_HPC_LA14_N
@@ -695,10 +695,12 @@ set_property -dict { PACKAGE_PIN Y40  IOSTANDARD LVCMOS18 } [get_ports { cam_hal
 # # #NET  5N964                     LOC = AE39 | IOSTANDARD=LVCMOS18; # Bank  17 VCCO - VADJ_FPGA - IO_L11P_T1_SRCC_17
 # # #NET  5N963                     LOC = AE40 | IOSTANDARD=LVCMOS18; # Bank  17 VCCO - VADJ_FPGA - IO_L11N_T1_SRCC_17
 
-# set_property -dict { PACKAGE_PIN AD40 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA00_CC_P }];   # AD40  FMC2_HPC_LA00_CC_P
-# set_property -dict { PACKAGE_PIN AD41 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA00_CC_N }];   # AD41  FMC2_HPC_LA00_CC_N
-# set_property -dict { PACKAGE_PIN AF39 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_CLK0_M2C_P }];  # AF39  FMC2_HPC_CLK0_M2C_P
-# set_property -dict { PACKAGE_PIN AF40 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_CLK0_M2C_N }];  # AF40  FMC2_HPC_CLK0_M2C_N
+set_property -dict { PACKAGE_PIN AD40 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[5] }];   # AD40  FMC2_HPC_LA00_CC_P
+set_property -dict { PACKAGE_PIN AD41 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[4] }];   # AD41  FMC2_HPC_LA00_CC_N
+
+create_clock -period 20.000 -name cam_pclk_i [get_ports cam_pclk_i ]
+set_property -dict { PACKAGE_PIN AF39 IOSTANDARD LVCMOS18 } [get_ports { cam_pclk_i }];  # AF39  FMC2_HPC_CLK0_M2C_P
+set_property -dict { PACKAGE_PIN AF40 IOSTANDARD LVCMOS18 } [get_ports { cam_xclk_o }];  # AF40  FMC2_HPC_CLK0_M2C_N
 
 # set_property -dict { PACKAGE_PIN AF41 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA01_CC_P }];   # AF41  FMC2_HPC_LA01_CC_P
 # set_property -dict { PACKAGE_PIN AG41 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA01_CC_N }];   # AG41  FMC2_HPC_LA01_CC_N
@@ -720,23 +722,23 @@ set_property -dict { PACKAGE_PIN Y40  IOSTANDARD LVCMOS18 } [get_ports { cam_hal
 # # #NET  5N955                     LOC = AH40 | IOSTANDARD=LVCMOS18; # Bank  17 VCCO - VADJ_FPGA - IO_L20P_T3_17
 # # #NET  5N956                     LOC = AH41 | IOSTANDARD=LVCMOS18; # Bank  17 VCCO - VADJ_FPGA - IO_L20N_T3_17
 
-# set_property -dict { PACKAGE_PIN AL41 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA04_P }];      # AL41  FMC2_HPC_LA04_P
-# set_property -dict { PACKAGE_PIN AL42 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA04_N }];      # AL42  FMC2_HPC_LA04_N
+set_property -dict { PACKAGE_PIN AL41 IOSTANDARD LVCMOS18 } [get_ports { cam_vsync }];      # AL41  FMC2_HPC_LA04_P
+set_property -dict { PACKAGE_PIN AL42 IOSTANDARD LVCMOS18 } [get_ports { cam_href }];      # AL42  FMC2_HPC_LA04_N
 # set_property -dict { PACKAGE_PIN AJ40 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA16_P }];      # AJ40  FMC2_HPC_LA16_P
 # set_property -dict { PACKAGE_PIN AJ41 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA16_N }];      # AJ41  FMC2_HPC_LA16_N
 
 # set_property -dict { PACKAGE_PIN AK39 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA02_P }];      # AK39  FMC2_HPC_LA02_P
 # set_property -dict { PACKAGE_PIN AL39 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA02_N }];      # AL39  FMC2_HPC_LA02_N
-# set_property -dict { PACKAGE_PIN AJ42 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA03_P }];      # AJ42  FMC2_HPC_LA03_P
-# set_property -dict { PACKAGE_PIN AK42 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA03_N }];      # AK42  FMC2_HPC_LA03_N
+set_property -dict { PACKAGE_PIN AJ42 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[3] }];      # AJ42  FMC2_HPC_LA03_P
+set_property -dict { PACKAGE_PIN AK42 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[2] }];      # AK42  FMC2_HPC_LA03_N
 
 # # #NET  5N829                     LOC = AG37 | IOSTANDARD=LVCMOS18; # Bank  17 VCCO - VADJ_FPGA - IO_25_VRP_17
 # # #NET  6N1095                    LOC = N35  | IOSTANDARD=LVCMOS18; # Bank  18 VCCO - VADJ_FPGA - IO_0_VRN_18
 # # #NET  6N1094                    LOC = T34  | IOSTANDARD=LVCMOS18; # Bank  18 VCCO - VADJ_FPGA - IO_L1P_T0_18
 # # #NET  6N1093                    LOC = R35  | IOSTANDARD=LVCMOS18; # Bank  18 VCCO - VADJ_FPGA - IO_L1N_T0_18
 
-set_property -dict { PACKAGE_PIN N33 IOSTANDARD LVCMOS18 } [get_ports { cam_href }];       # N33   FMC2_HPC_LA26_P
-set_property -dict { PACKAGE_PIN N34 IOSTANDARD LVCMOS18 } [get_ports { cam_vsync }];       # N34   FMC2_HPC_LA26_N
+# set_property -dict { PACKAGE_PIN N33 IOSTANDARD LVCMOS18 } [get_ports { cam_href }];       # N33   FMC2_HPC_LA26_P
+# set_property -dict { PACKAGE_PIN N34 IOSTANDARD LVCMOS18 } [get_ports { cam_vsync }];       # N34   FMC2_HPC_LA26_N
 # set_property -dict { PACKAGE_PIN R33 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA25_P }];       # R33   FMC2_HPC_LA25_P
 # set_property -dict { PACKAGE_PIN R34 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA25_N }];       # R34   FMC2_HPC_LA25_N
 
@@ -745,8 +747,8 @@ set_property -dict { PACKAGE_PIN N34 IOSTANDARD LVCMOS18 } [get_ports { cam_vsyn
 # set_property -dict { PACKAGE_PIN T32 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA30_P }];       # T32   FMC2_HPC_LA30_P
 # set_property -dict { PACKAGE_PIN R32 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA30_N }];       # R32   FMC2_HPC_LA30_N
 
-set_property -dict { PACKAGE_PIN P32 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[5] }];       # P32   FMC2_HPC_LA27_P
-set_property -dict { PACKAGE_PIN P33 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[4] }];       # P33   FMC2_HPC_LA27_N
+# set_property -dict { PACKAGE_PIN P32 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[5] }];       # P32   FMC2_HPC_LA27_P
+# set_property -dict { PACKAGE_PIN P33 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[4] }];       # P33   FMC2_HPC_LA27_N
 # set_property -dict { PACKAGE_PIN T36 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA33_P }];       # T36   FMC2_HPC_LA33_P
 # set_property -dict { PACKAGE_PIN R37 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA33_N }];       # R37   FMC2_HPC_LA33_N
 
@@ -755,14 +757,15 @@ set_property -dict { PACKAGE_PIN P33 IOSTANDARD LVCMOS18 } [get_ports { cam_half
 # set_property -dict { PACKAGE_PIN U34 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA24_P }];       # U34   FMC2_HPC_LA24_P
 # set_property -dict { PACKAGE_PIN T35 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA24_N }];       # T35   FMC2_HPC_LA24_N
 
-set_property -dict { PACKAGE_PIN R38 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[1] }];       # R38   FMC2_HPC_LA23_P
-set_property -dict { PACKAGE_PIN R39 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[0] }];       # R39   FMC2_HPC_LA23_N
-set_property -dict { PACKAGE_PIN U37 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[3] }];    # U37   FMC2_HPC_LA17_CC_P
-set_property -dict { PACKAGE_PIN U38 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[2] }];    # U38   FMC2_HPC_LA17_CC_N
+# set_property -dict { PACKAGE_PIN R38 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[1] }];       # R38   FMC2_HPC_LA23_P
+# set_property -dict { PACKAGE_PIN R39 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[0] }];       # R39   FMC2_HPC_LA23_N
+# set_property -dict { PACKAGE_PIN U37 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[3] }];    # U37   FMC2_HPC_LA17_CC_P
+# set_property -dict { PACKAGE_PIN U38 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[2] }];    # U38   FMC2_HPC_LA17_CC_N
 
 # create_clock -add -name sys_cam_pclk_pin  -period 20.00 -waveform {0 10.0} [get_ports cam_pclk_i];
-set_property -dict { PACKAGE_PIN U39 IOSTANDARD LVCMOS18 } [get_ports { cam_pclk_i }];   # U39   FMC2_HPC_CLK1_M2C_P
-# set_property -dict { PACKAGE_PIN T39 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_CLK1_M2C_N }];   # T39   FMC2_HPC_CLK1_M2C_N
+# create_clock -add -name cam_pclk -period 20.00 -waveform {0 10.00} [get_ports cam_pclk_i];
+# set_property -dict { PACKAGE_PIN U39 IOSTANDARD LVCMOS18 } [get_ports { cam_pclk_i }];   # U39   FMC2_HPC_CLK1_M2C_P
+# set_property -dict { PACKAGE_PIN T39 IOSTANDARD LVCMOS18 } [get_ports { cam_xclk_o }];   # T39   FMC2_HPC_CLK1_M2C_N
 # set_property -dict { PACKAGE_PIN U36 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA18_CC_P }];    # U36   FMC2_HPC_LA18_CC_P
 # set_property -dict { PACKAGE_PIN T37 IOSTANDARD LVCMOS18 } [get_ports { FMC2_HPC_LA18_CC_N }];    # T37   FMC2_HPC_LA18_CC_N
 
@@ -1934,3 +1937,5 @@ create_clock -add -name sys_clk_pin -period 5.00 -waveform {0 2.5} [get_ports cl
 # set_property PACKAGE_PIN D8 [get_ports FMC1_HPC_DP0_M2C_P]
 # set_property PACKAGE_PIN E1 [get_ports FMC1_HPC_DP0_C2M_N]
 # set_property PACKAGE_PIN D7 [get_ports FMC1_HPC_DP0_M2C_N]
+
+# set_clock_groups -asynchronous -group [get_clocks sys_clk_pin] -group [get_clocks cam_pclk]

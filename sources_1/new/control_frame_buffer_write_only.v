@@ -162,7 +162,7 @@ module control_frame_buffer_write_only#(
     parameter ADDR_WIDTH = 32,
     parameter FIFO_DEPTH_WIDTH = 9,
     parameter THRESHOLD_START = 500, // Ngưỡng bắt đầu ghi
-    parameter THRESHOLD_STOP  = 300  // Ngưỡng dừng ghi
+    parameter THRESHOLD_STOP  = 499  // Ngưỡng dừng ghi
 )(
     input                               clk_i,
     input                               resetn_i,
