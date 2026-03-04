@@ -66,7 +66,7 @@ module Top_DVP#(
         .clk_out25MHz(clk_25MHz),
         .clk_out24MHz(cam_xclk_o),
         // Status and control signals
-        .resetn(resetn_i),
+        .resetn(/* resetn_i */ 1'b1),
         .locked(locked),
         // Clock in ports
         .clk_in1_p(clk_in_p),
@@ -89,7 +89,7 @@ module Top_DVP#(
         .clk_i               (clk_200MHz),
         .clk25MHz_i          (clk_25MHz),
         .clk50MHz_i          (clk_50MHz),
-        .resetn_i            (locked/* resetn_i */),
+        .resetn_i            (locked && resetn_i),
 
         // Camera Interface
         .cam_pclk_i          (cam_pclk_i),

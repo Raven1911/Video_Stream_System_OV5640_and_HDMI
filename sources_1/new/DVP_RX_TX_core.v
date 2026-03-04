@@ -86,25 +86,51 @@ module DVP_RX_TX_core#(
     //     .pixel_data_o       (pixel_data_o)
     // );
 
-    ov5640_data ov5640_data_inst(
-
-        .sys_rst_n          (resetn_i),  //复位信号
-        .ov5640_pclk        (cam_pclk_i    ),   //摄像头像素时钟
-        .ov5640_href        (cam_href    ),   //摄像头行同步信号
-        .ov5640_vsync       (cam_vsync   ),   //摄像头场同步信号
-        .ov5640_data        (cam_half_pixel_i    ),   //摄像头图像数据
-
-        .ov5640_wr_en       (wr_pixel_o   ),   //图像数据有效使能信号
-        .ov5640_data_out    (pixel_data_o)    //图像数据
-
+    wire detect_vsync;
+    wire n_edge_vsync;
+    uiSensorRGB565 cam_Sensor (
+        .rstn_i(resetn_i),
+        .cmos_clk_i(),
+        .cmos_pclk_i(cam_pclk_i),
+        .cmos_href_i(cam_href),
+        .cmos_vsync_i(cam_vsync),
+        .cmos_data_i(cam_half_pixel_i),
+        .cmos_xclk_o(),
+        .rgb_o(pixel_data_o),
+        .de_o(wr_pixel_o),
+        .vs_o(detect_vsync),
+        .hs_o()
     );
+
+    edge_detector edge_vsync(
+        .clk(clk_i),
+        .reset_n(resetn_i),
+        .level_edge(detect_vsync),
+        .p_edge(),
+        .n_edge(n_edge_vsync),
+        .any_edge()
+    );
+
+
+
+    // ov5640_data ov5640_data_inst(
+    //     .sys_rst_n          (resetn_i),  //复位信号
+    //     .ov5640_pclk        (cam_pclk_i    ),   //摄像头像素时钟
+    //     .ov5640_href        (cam_href    ),   //摄像头行同步信号
+    //     .ov5640_vsync       (cam_vsync   ),   //摄像头场同步信号
+    //     .ov5640_data        (cam_half_pixel_i    ),   //摄像头图像数据
+
+    //     .ov5640_wr_en       (wr_pixel_o   ),   //图像数据有效使能信号
+    //     .ov5640_data_out    (pixel_data_o)    //图像数据
+
+    // );
 
 
     wire [FIFO_DEPTH_WIDTH-1:0] data_count_r;
 
     asyn_fifo #(.DATA_WIDTH(FIFO_DATA_WIDTH),.FIFO_DEPTH_WIDTH(FIFO_DEPTH_WIDTH)
     ) fifo_camera(
-		.rst_n(resetn_i),
+		.rst_n(resetn_i /* && !n_edge_vsync */),
 		.clk_write(cam_pclk_i),
 		.clk_read(clk_i), //clock input from both domains
 		.write(wr_pixel_o),
@@ -133,6 +159,16 @@ module DVP_RX_TX_core#(
     //     .empty(ctrl_empty)
     // );
 
+    register_DFF #(
+        .SIZE_BITS(FIFO_DATA_WIDTH)
+    ) delay_data2framebuffer(
+        .clk_i(clk_i),
+        .resetn_i(resetn_i),
+        .D_i(ctrl_data_i),
+        .Q_o(delay_data_i)
+    );
+
+    
 
     frame_buffer # (
         .ADDR_WIDTH     (BRAM_ADDR_WIDTH),
@@ -153,7 +189,7 @@ module DVP_RX_TX_core#(
         .addr_rd0 (ctrl_addr_rd),
         //.addr_rd1 (),
 
-        .Data_in0 (ctrl_data_i),
+        .Data_in0 (delay_data_i),
         //.Data_in1 (),
         .Data_out0(ctrl_data_o)//,
         //.Data_out1()
@@ -169,6 +205,7 @@ module DVP_RX_TX_core#(
     wire [BRAM_ADDR_WIDTH-1:0]  ctrl_addr_rd;
 
     wire [DATA_WIDTH*2-1:0]     ctrl_data_i;
+    wire [DATA_WIDTH*2-1:0]     delay_data_i;
     wire [DATA_WIDTH*2-1:0]     ctrl_data_o;
 
 
@@ -185,6 +222,7 @@ module DVP_RX_TX_core#(
 
         .empty_i(ctrl_empty),
         .data_count_r_i(data_count_r),
+        .n_edge_vsync_i(n_edge_vsync),
 
         .wr_o(ctrl_wr),
         .addr_wr_o(ctrl_addr_wr),

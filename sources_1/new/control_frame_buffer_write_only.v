@@ -156,7 +156,6 @@
 // endmodule
 
 
-`timescale 1ns / 1ps
 
 module control_frame_buffer_write_only#(
     parameter ADDR_WIDTH = 32,
@@ -174,6 +173,7 @@ module control_frame_buffer_write_only#(
     input                               empty_i,
     // data_count_r_i: Số lượng phần tử hiện có trong FIFO
     input       [FIFO_DEPTH_WIDTH-1:0]  data_count_r_i,
+    input                               n_edge_vsync_i, 
 
     // wr_o: '1' -> Cho phép Ghi vào Frame Buffer
     output                              wr_o,
@@ -254,7 +254,7 @@ module control_frame_buffer_write_only#(
                     addr_wr_o_next = count_pixel_wr_reg;
                     
                     // Tăng địa chỉ ghi
-                    if (count_pixel_wr_reg == total_pixel) begin
+                    if ((count_pixel_wr_reg == total_pixel)) begin
                         count_pixel_wr_next = {ADDR_WIDTH{1'b0}};
                         page_written_once_next = 1'b1; // Đã xong ít nhất 1 trang
                     end else begin
