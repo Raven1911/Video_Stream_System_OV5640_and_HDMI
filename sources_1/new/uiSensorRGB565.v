@@ -61,7 +61,7 @@ always@(posedge cmos_pclk_i)begin
        cmos_vsync_r2 <= cmos_vsync_r1;       
 end    
 
-parameter FRAM_FREE_CNT = 2;
+parameter FRAM_FREE_CNT = 1;
 reg [7:0]vs_cnt;
 wire vs_p = !cmos_vsync_r2&&cmos_vsync_r1;
 always@(posedge cmos_pclk_i)begin
@@ -82,6 +82,7 @@ wire out_en = (vs_cnt == FRAM_FREE_CNT);
 reg href_cnt   = 1'b0;
 reg data_en  = 1'b0;
 reg [15:0]rgb2 = 32'd0;
+
 always@(posedge cmos_pclk_i)begin
 	if(vs_p||(~out_en))begin
 	   href_cnt  <= 1'd0;

@@ -61,8 +61,6 @@ module frame_buffer#(
 
             
 
-
-
             decoder_frame_buffer#(
                 .ADDR_WIDTH(ADDR_WIDTH),
                 .DATA_WIDTH(DATA_WIDTH),
@@ -473,6 +471,42 @@ module single_rd_ecoder_frame_buffer#(
 endmodule
 
 
+// module encoder_frame_buffer#(
+//     parameter DATA_WIDTH    = 16, //WORD_SIZE
+//     parameter NUMBER_BRAM   = 3
+// )(  
+//     input                                       clk_i,
+//     input                                       resetn_i,
+//     input       [NUMBER_BRAM-1:0]               ID_bram_selected_rd_i,
+//     input       [NUMBER_BRAM*DATA_WIDTH-1:0]    s_Data_out_i,
+//     output  reg [DATA_WIDTH-1:0]                Data_out    
+
+// );  
+
+//     reg         [NUMBER_BRAM-1:0]  ID_bram_next, ID_bram_reg;
+
+//     always @(posedge clk_i) begin
+//         if (~resetn_i) begin
+//             ID_bram_reg <= 0;
+//         end
+//         else begin
+//             ID_bram_reg <= ID_bram_next;
+//         end
+        
+//     end
+
+//     integer i;
+//     always @(*) begin
+//         ID_bram_next = ID_bram_selected_rd_i;
+//         Data_out  = {DATA_WIDTH{1'b0}};
+//         for (i = 0; i < NUMBER_BRAM; i = i + 1) begin  
+//             Data_out = Data_out | ({DATA_WIDTH{/* ID_bram_selected_rd_i */ID_bram_reg[i]}} & s_Data_out_i[((DATA_WIDTH*i) + DATA_WIDTH -1) -: DATA_WIDTH]);
+//         end
+//     end
+
+// endmodule
+
+
 module encoder_frame_buffer#(
     parameter DATA_WIDTH    = 16, //WORD_SIZE
     parameter NUMBER_BRAM   = 3
@@ -481,18 +515,22 @@ module encoder_frame_buffer#(
     input                                       resetn_i,
     input       [NUMBER_BRAM-1:0]               ID_bram_selected_rd_i,
     input       [NUMBER_BRAM*DATA_WIDTH-1:0]    s_Data_out_i,
-    output  reg [DATA_WIDTH-1:0]                Data_out    
+    output      [DATA_WIDTH-1:0]                Data_out    
 
 );  
 
     reg         [NUMBER_BRAM-1:0]  ID_bram_next, ID_bram_reg;
+    reg         [DATA_WIDTH-1:0]   Data_out_next, Data_out_reg;
 
-    always @(posedge clk_i) begin
+
+    always @(posedge clk_i or negedge resetn_i) begin
         if (~resetn_i) begin
             ID_bram_reg <= 0;
+            Data_out_reg <= 0;
         end
         else begin
             ID_bram_reg <= ID_bram_next;
+            Data_out_reg <= Data_out_next;
         end
         
     end
@@ -500,13 +538,16 @@ module encoder_frame_buffer#(
     integer i;
     always @(*) begin
         ID_bram_next = ID_bram_selected_rd_i;
-        Data_out  = {DATA_WIDTH{1'b0}};
+        Data_out_next  = {DATA_WIDTH{1'b0}};
         for (i = 0; i < NUMBER_BRAM; i = i + 1) begin  
-            Data_out = Data_out | ({DATA_WIDTH{/* ID_bram_selected_rd_i */ID_bram_reg[i]}} & s_Data_out_i[((DATA_WIDTH*i) + DATA_WIDTH -1) -: DATA_WIDTH]);
+            Data_out_next = Data_out_next | ({DATA_WIDTH{/* ID_bram_selected_rd_i */ID_bram_reg[i]}} & s_Data_out_i[((DATA_WIDTH*i) + DATA_WIDTH -1) -: DATA_WIDTH]);
         end
     end
 
+    assign Data_out = Data_out_reg;
+
 endmodule
+
 
 
 module block_ram_frame_buffer0#(

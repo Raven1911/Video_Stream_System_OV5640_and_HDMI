@@ -25,8 +25,8 @@ module DVP_RX_TX_core#(
 
     parameter BRAM_ADDR_WIDTH = 32,
     parameter BRAM_DATA_WIDTH = 16,
-    parameter BRAM_NUMBER_BLOCK = 75,
-    parameter BRAM_DEPTH_SIZE = 4096,
+    parameter BRAM_NUMBER_BLOCK = 19,   //75
+    parameter BRAM_DEPTH_SIZE = 16384,   // 4096
     parameter BRAM_MODE = 2,
     parameter BRAM_ENB_TEST_PATTERN = 0,
 
@@ -159,14 +159,14 @@ module DVP_RX_TX_core#(
     //     .empty(ctrl_empty)
     // );
 
-    register_DFF #(
-        .SIZE_BITS(FIFO_DATA_WIDTH)
-    ) delay_data2framebuffer(
-        .clk_i(clk_i),
-        .resetn_i(resetn_i),
-        .D_i(ctrl_data_i),
-        .Q_o(delay_data_i)
-    );
+    // register_DFF #(
+    //     .SIZE_BITS(FIFO_DATA_WIDTH)
+    // ) delay_data2framebuffer(
+    //     .clk_i(clk_i),
+    //     .resetn_i(resetn_i),
+    //     .D_i(ctrl_data_i),
+    //     .Q_o(delay_data_i)
+    // );
 
     
 
@@ -189,7 +189,7 @@ module DVP_RX_TX_core#(
         .addr_rd0 (ctrl_addr_rd),
         //.addr_rd1 (),
 
-        .Data_in0 (delay_data_i),
+        .Data_in0 (/*delay_data_i*/ctrl_data_i),
         //.Data_in1 (),
         .Data_out0(ctrl_data_o)//,
         //.Data_out1()
@@ -258,6 +258,15 @@ module DVP_RX_TX_core#(
         .Q_o(ctrl2fifo_rd)
     );
 
+    register_DFF #(
+        .SIZE_BITS(1)
+    ) register_DFF_HDMI_FIFO_2 (
+        .clk_i(clk_i),
+        .resetn_i(resetn_i),
+        .D_i(ctrl2fifo_rd),
+        .Q_o(ctrl2fifo_rd_2)
+    );
+
     // fifo_dvp_unit#(
     //     .ADDR_WIDTH(ADDR_WIDTH_FIFO),
     //     .DATA_WIDTH(DATA_WIDTH_FIFO)
@@ -275,7 +284,7 @@ module DVP_RX_TX_core#(
     // );
 
     wire wr_fifo_hdmi;
-    assign wr_fifo_hdmi = /* ctrl_rd | */ ctrl2fifo_rd;
+    assign wr_fifo_hdmi =  ctrl2fifo_rd_2;///* ctrl_rd | */ ctrl2fifo_rd;
     
     wire [FIFO_DEPTH_WIDTH-1:0] data_count_w;
 

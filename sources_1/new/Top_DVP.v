@@ -27,8 +27,8 @@ module Top_DVP#(
 
     parameter BRAM_ADDR_WIDTH = 32,
     parameter BRAM_DATA_WIDTH = 16,
-    parameter BRAM_NUMBER_BLOCK = 75, //75
-    parameter BRAM_DEPTH_SIZE = 4096,
+    parameter BRAM_NUMBER_BLOCK = 5, //19, //75
+    parameter BRAM_DEPTH_SIZE = 65536,//16384, // 4096
     parameter BRAM_MODE = 2
 
 )(

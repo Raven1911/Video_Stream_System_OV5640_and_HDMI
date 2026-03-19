@@ -698,7 +698,7 @@ set_property -dict { PACKAGE_PIN AA42 IOSTANDARD LVCMOS18 } [get_ports { cam_hal
 set_property -dict { PACKAGE_PIN AD40 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[5] }];   # AD40  FMC2_HPC_LA00_CC_P
 set_property -dict { PACKAGE_PIN AD41 IOSTANDARD LVCMOS18 } [get_ports { cam_half_pixel_i[4] }];   # AD41  FMC2_HPC_LA00_CC_N
 
-create_clock -period 20.000 -name cam_pclk_i [get_ports cam_pclk_i ]
+
 set_property -dict { PACKAGE_PIN AF39 IOSTANDARD LVCMOS18 } [get_ports { cam_pclk_i }];  # AF39  FMC2_HPC_CLK0_M2C_P
 set_property -dict { PACKAGE_PIN AF40 IOSTANDARD LVCMOS18 } [get_ports { cam_xclk_o }];  # AF40  FMC2_HPC_CLK0_M2C_N
 
@@ -1602,7 +1602,7 @@ set_property -dict { PACKAGE_PIN E18 IOSTANDARD LVDS } [get_ports clk_in_n];
 
 create_clock -add -name sys_clk_pin -period 5.00 -waveform {0 2.5} [get_ports clk_in_p];
 # create_clock -add -name sys_clk_pin -period 6.667 -waveform {0 3.333} [get_ports clk_in_p]
-
+create_clock -period 20.000 -name cam_pclk_i [get_ports cam_pclk_i ]
 
 # set_property PACKAGE_PIN E19 [get_ports SYSCLK_P]
 # set_property IOSTANDARD LVDS [get_ports SYSCLK_P]
@@ -1938,4 +1938,6 @@ create_clock -add -name sys_clk_pin -period 5.00 -waveform {0 2.5} [get_ports cl
 # set_property PACKAGE_PIN E1 [get_ports FMC1_HPC_DP0_C2M_N]
 # set_property PACKAGE_PIN D7 [get_ports FMC1_HPC_DP0_M2C_N]
 
+# set_clock_groups -asynchronous -group [get_clocks sys_clk_pin] -group [get_clocks cam_pclk_i]
+set_clock_groups -asynchronous -group [get_clocks cam_pclk_i]
 # set_clock_groups -asynchronous -group [get_clocks sys_clk_pin] -group [get_clocks cam_pclk]

@@ -412,8 +412,8 @@ module tb_DVP_RX_TX_core3;
     parameter TEST_HEIGHT  = 480;
     parameter NUM_IMAGES   = 20; 
 
-    string INPUT_PATH  = "D:/verilog_projects/VIDEO_SYSTEM_HDL/VIDEO_SYSTEM_HDL.srcs/sources_1/python_programs/output_images/";
-    string OUTPUT_PATH = "D:/verilog_projects/VIDEO_SYSTEM_HDL/VIDEO_SYSTEM_HDL.srcs/sources_1/python_programs/output_testbench/";
+    string INPUT_PATH  = "/home/raven1911/Data/vivado_prj/VIDEO_SYSTEM_HDL/python_programs/output_images/";
+    string OUTPUT_PATH = "/home/raven1911/Data/vivado_prj/VIDEO_SYSTEM_HDL/python_programs/output_testbench/";
 
     //================================================================
     // 2. SIGNALS & VARIABLE DECLARATIONS (Đã sửa lỗi tại đây)
