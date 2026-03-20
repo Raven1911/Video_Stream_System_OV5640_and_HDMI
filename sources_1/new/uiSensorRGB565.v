@@ -61,7 +61,7 @@ always@(posedge cmos_pclk_i)begin
        cmos_vsync_r2 <= cmos_vsync_r1;       
 end    
 
-parameter FRAM_FREE_CNT = 1;
+parameter FRAM_FREE_CNT = 2; //number of frames to be free after reset, for sensor to be stable and output valid data. Depends on the sensor, can be adjusted according to the actual situation.
 reg [7:0]vs_cnt;
 wire vs_p = !cmos_vsync_r2&&cmos_vsync_r1;
 always@(posedge cmos_pclk_i)begin

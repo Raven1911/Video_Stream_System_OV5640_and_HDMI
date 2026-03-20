@@ -128,7 +128,9 @@ module DVP_RX_TX_core#(
 
     wire [FIFO_DEPTH_WIDTH-1:0] data_count_r;
 
-    asyn_fifo #(.DATA_WIDTH(FIFO_DATA_WIDTH),.FIFO_DEPTH_WIDTH(FIFO_DEPTH_WIDTH)
+    asyn_fifo #(
+        .DATA_WIDTH(FIFO_DATA_WIDTH),
+        .FIFO_DEPTH_WIDTH(FIFO_DEPTH_WIDTH)
     ) fifo_camera(
 		.rst_n(resetn_i /* && !n_edge_vsync */),
 		.clk_write(cam_pclk_i),
@@ -159,15 +161,57 @@ module DVP_RX_TX_core#(
     //     .empty(ctrl_empty)
     // );
 
-    // register_DFF #(
-    //     .SIZE_BITS(FIFO_DATA_WIDTH)
-    // ) delay_data2framebuffer(
-    //     .clk_i(clk_i),
-    //     .resetn_i(resetn_i),
-    //     .D_i(ctrl_data_i),
-    //     .Q_o(delay_data_i)
-    // );
 
+    wire ctrl_delay_wr0;
+    wire ctrl_delay_wr1;
+    register_DFF #(
+        .SIZE_BITS(1)
+    ) delay_wr2framebuffer(
+        .clk_i(clk_i),
+        .resetn_i(resetn_i),
+        .D_i(ctrl_wr),
+        .Q_o(ctrl_delay_wr0)
+    );
+
+    register_DFF #(
+        .SIZE_BITS(1)
+    ) delay_wr12framebuffer(
+        .clk_i(clk_i),
+        .resetn_i(resetn_i),
+        .D_i(ctrl_delay_wr0),
+        .Q_o(ctrl_delay_wr1)
+    );
+
+    wire [BRAM_ADDR_WIDTH-1:0] delay_addr_wr0;
+    wire [BRAM_ADDR_WIDTH-1:0] delay_addr_wr1;
+    register_DFF #(
+        .SIZE_BITS(BRAM_ADDR_WIDTH)
+    ) delay_addr_wr2framebuffer(
+        .clk_i(clk_i),
+        .resetn_i(resetn_i),
+        .D_i(ctrl_addr_wr),
+        .Q_o(delay_addr_wr0)
+    );
+    register_DFF #(
+        .SIZE_BITS(BRAM_ADDR_WIDTH)
+    ) delay_addr1_wr2framebuffer(
+        .clk_i(clk_i),
+        .resetn_i(resetn_i),
+        .D_i(delay_addr_wr0),
+        .Q_o(delay_addr_wr1)
+    );
+
+    
+
+    wire [BRAM_DATA_WIDTH-1:0] delay_data_wr;
+    register_DFF #(
+        .SIZE_BITS(BRAM_DATA_WIDTH)
+    ) delay_data_wr2framebuffer(
+        .clk_i(clk_i),
+        .resetn_i(resetn_i),
+        .D_i(ctrl_data_i),
+        .Q_o(delay_data_wr)
+    );
     
 
     frame_buffer # (
@@ -181,15 +225,15 @@ module DVP_RX_TX_core#(
         .clk_i    (clk_i),
         .resetn_i (resetn_i),
 
-        .wr0_i    (ctrl_wr),
+        .wr0_i    (/*ctrl_wr*/ ctrl_delay_wr1),
         //.wr1_i    (),
 
-        .addr_wr0 (ctrl_addr_wr),
+        .addr_wr0 (delay_addr_wr1),
         //.addr_wr1 (),
         .addr_rd0 (ctrl_addr_rd),
         //.addr_rd1 (),
 
-        .Data_in0 (/*delay_data_i*/ctrl_data_i),
+        .Data_in0 (delay_data_wr /*ctrl_data_i*/),
         //.Data_in1 (),
         .Data_out0(ctrl_data_o)//,
         //.Data_out1()
@@ -288,7 +332,9 @@ module DVP_RX_TX_core#(
     
     wire [FIFO_DEPTH_WIDTH-1:0] data_count_w;
 
-    asyn_fifo #(.DATA_WIDTH(FIFO_DATA_WIDTH),.FIFO_DEPTH_WIDTH(FIFO_DEPTH_WIDTH)
+    asyn_fifo #(
+        .DATA_WIDTH(FIFO_DATA_WIDTH),
+        .FIFO_DEPTH_WIDTH(FIFO_DEPTH_WIDTH) 
     ) fifo_hdmi(
 		.rst_n(resetn_i),
 		.clk_write(clk_i),

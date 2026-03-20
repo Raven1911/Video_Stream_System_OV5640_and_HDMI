@@ -145,12 +145,13 @@ module dual_port_sync
 					 DATA_WIDTH=8
 	)
 	(
-		input clk_r,
-		input clk_w,
-		input we, 
-		input[DATA_WIDTH-1:0] din,
-		input[ADDR_WIDTH-1:0] addr_a,addr_b, //addr_a for write, addr_b for read
-		output[DATA_WIDTH-1:0] dout
+		input 	clk_r,
+		input 	clk_w,
+		input 	we, 
+		input	[DATA_WIDTH-1:0] din,
+		input	[ADDR_WIDTH-1:0] addr_a,addr_b, //addr_a for write, addr_b for read
+		output reg[DATA_WIDTH-1:0] dout
+		// output [DATA_WIDTH-1:0] dout
 	);
 	
 	reg[DATA_WIDTH-1:0] ram[2**ADDR_WIDTH-1:0];
@@ -161,8 +162,10 @@ module dual_port_sync
 	end
 	always @(posedge clk_r) begin
 		addr_b_q<=addr_b;	
+		dout<=ram[addr_b_q];
 	end
-	assign dout=ram[addr_b_q];
+	// assign dout=ram[addr_b_q];
+
 	
 endmodule
 

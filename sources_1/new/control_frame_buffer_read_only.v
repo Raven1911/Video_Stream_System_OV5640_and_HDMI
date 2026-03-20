@@ -265,7 +265,6 @@ module control_frame_buffer_read_only#(
     // 1. Logic Hysteresis cho FIFO
     always @(*) begin
         fifo_pause_next = fifo_pause_reg;
-        
         if (data_count_w_i >= THRESHOLD_HIGH) begin
             // Nếu vượt ngưỡng cao hoặc FIFO Full thực tế -> Tạm dừng đọc
             fifo_pause_next = 1'b1;
@@ -306,16 +305,23 @@ module control_frame_buffer_read_only#(
             end
 
             // Thực hiện đọc dữ liệu
-            if (read_strobe_allow) begin
-                rd_o_next = 1'b1;
-                addr_rd_o_next = count_pixel_rd_reg;
+            // if (read_strobe_allow) begin
+            //     rd_o_next = 1'b1;
+            //     addr_rd_o_next = count_pixel_rd_reg;
             
-                // Tăng địa chỉ hoặc quay vòng
-                if (count_pixel_rd_reg == total_pixel)
-                    count_pixel_rd_next = {ADDR_WIDTH{1'b0}};
-                else
-                    count_pixel_rd_next = count_pixel_rd_reg + 1;
-            end
+            //     // Tăng địa chỉ hoặc quay vòng
+            //     if (count_pixel_rd_reg == total_pixel)
+            //         count_pixel_rd_next = {ADDR_WIDTH{1'b0}};
+            //     else
+            //         count_pixel_rd_next = count_pixel_rd_reg + 1;
+            // end
+            rd_o_next = 1'b1;
+            addr_rd_o_next = count_pixel_rd_reg;
+            // Tăng địa chỉ hoặc quay vòng
+            if (count_pixel_rd_reg == total_pixel)
+                count_pixel_rd_next = {ADDR_WIDTH{1'b0}};
+            else
+                count_pixel_rd_next = count_pixel_rd_reg + 1;
         end
     end
 

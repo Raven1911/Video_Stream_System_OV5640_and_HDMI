@@ -28,11 +28,14 @@ module vgaHDMI_interface3(
     input wire [15:0]       fifo_data_in, // RGB565 data from FIFO
     output reg              fifo_read_en, // FIFO read enable
 
+    // output               fifo_read_en, // FIFO read enable
+
     // **output**
     output  hsync, vsync,
     output  dataEnable,
     output  vgaClock,
-    output /* reg */ [23:0] RGBchannel
+    // output /* reg */ [23:0] RGBchannel
+    output  reg  [23:0] RGBchannel
     );
 
     //FSM state declarations
@@ -42,6 +45,7 @@ module vgaHDMI_interface3(
 
     reg[1:0]    state_q,state_d;
     reg [23:0]  RGBchannel_q, RGBchannel_d;
+    reg         fifo_read_en_q, fifo_read_en_d;
 	wire[9:0]   pixel_x,pixel_y;
 
     //register operations
@@ -49,10 +53,12 @@ module vgaHDMI_interface3(
         if(!resetn) begin
             state_q<=DELAY;
             RGBchannel_q <= 24'b0;
+            // fifo_read_en_q <= 0;
         end
         else begin
             state_q<=state_d;
             RGBchannel_q <= RGBchannel_d;
+            // fifo_read_en_q <= fifo_read_en_d;
         end
     end
 
@@ -62,40 +68,51 @@ module vgaHDMI_interface3(
         state_d=state_q; 
         RGBchannel_d = RGBchannel_q;
         fifo_read_en=0;
+        fifo_read_en_d=0;
         // RGBchannel=24'b0;
-        case(state_q)
-            DELAY: if(pixel_x==1 && pixel_y==1) state_d=IDLE; //delay of one frame(33ms) needed to start up the camera
+        case(state_q)   
+            DELAY: if(pixel_x==1 && pixel_y==1) begin
+                state_d=IDLE; //delay of one frame(33ms) needed to start up the camera
+            end
+                
             IDLE:  if(pixel_x==1 && pixel_y==0 && !empty_fifo) begin //wait for pixel-data coming from asyn_fifo 
-                            RGBchannel_d = {fifo_data_in[15:11],3'b000, fifo_data_in[10:5],2'b00, fifo_data_in[4:0],3'b000}; //convert RGB565 to RGB888
-                            // RGBchannel_d = 24'hF8FCF8;
-                            fifo_read_en = 1;	
-                            state_d = DISPLAY;
+                        // RGBchannel_d = {fifo_data_in[15:11],3'b000, fifo_data_in[10:5],2'b00, fifo_data_in[4:0],3'b000}; //convert RGB565 to RGB888
+                        RGBchannel = {fifo_data_in[15:11],3'b000, fifo_data_in[10:5],2'b00, fifo_data_in[4:0],3'b000}; //convert RGB565 to RGB888
+                        
+                        // RGBchannel_d = 24'hF8FCF8;
+                        fifo_read_en = 1;
+                        // fifo_read_en_d = 1; // Đọc dữ liệu từ FIFO ở trạng thái IDLE khi pixel bắt đầu hiển thị (pixel_x=1, pixel_y=0) và FIFO không rỗng	
+                        state_d = DISPLAY;
                     end
             DISPLAY: if(pixel_x>=1 && pixel_x<=640 && pixel_y<480) begin //we will continue to read the asyn_fifo as long as current pixel coordinate is inside the visible screen(640x480) 
                             // RGBchannel_d = {fifo_data_in[15:11],3'b000, fifo_data_in[10:5],2'b00, fifo_data_in[4:0],3'b000}; //convert RGB565 to RGB888
                             //RGBchannel_d = 24'hF8FCF8;
                             fifo_read_en = 1;	
+                            // fifo_read_en_d = 1;
 
-                            if (empty_fifo) begin
-                                // TRƯỜNG HỢP 1: FIFO RỖNG -> Xuất màu ĐỎ để báo lỗi
-                                RGBchannel_d = 24'hFF0000; 
-                            end 
-                            // else if (fifo_data_in == 16'h0000) begin
-                            //     // TRƯỜNG HỢP 2: FIFO CÓ DATA NHƯNG LÀ 0 -> Xuất màu XANH DƯƠNG
-                            //     // (Có thể do camera đang bị che tối om)
-                            //     RGBchannel_d = 24'h0000FF;
+                            // if (empty_fifo) begin
+                            //     // TRƯỜNG HỢP 1: FIFO RỖNG -> Xuất màu ĐỎ để báo lỗi
+                            //     RGBchannel_d = 24'hFF0000; 
                             // end 
-                            else begin
-                                // TRƯỜNG HỢP 3: CHẠY THẬT
-                                RGBchannel_d = {fifo_data_in[15:11], 3'b000, fifo_data_in[10:5], 2'b00, fifo_data_in[4:0], 3'b000};
-                            end
+                            // // else if (fifo_data_in == 16'h0000) begin
+                            // //     // TRƯỜNG HỢP 2: FIFO CÓ DATA NHƯNG LÀ 0 -> Xuất màu XANH DƯƠNG
+                            // //     // (Có thể do camera đang bị che tối om)
+                            // //     RGBchannel_d = 24'h0000FF;
+                            // // end 
+                            // else begin
+                            //     // TRƯỜNG HỢP 3: CHẠY THẬT
+                            //     RGBchannel_d = {fifo_data_in[15:11], 3'b000, fifo_data_in[10:5], 2'b00, fifo_data_in[4:0], 3'b000};
+                            // end
+                            // RGBchannel_d = {fifo_data_in[15:11], 3'b000, fifo_data_in[10:5], 2'b00, fifo_data_in[4:0], 3'b000};
+                            RGBchannel = {fifo_data_in[15:11],3'b000, fifo_data_in[10:5],2'b00, fifo_data_in[4:0],3'b000}; //convert RGB565 to RGB888
                         end
             // default: state_d=DELAY;
             IDLE: state_d=DELAY;
         endcase
         end
 
-    assign RGBchannel = RGBchannel_q;
+    // assign RGBchannel = RGBchannel_q;
+    // assign fifo_read_en = fifo_read_en_q;
 
     //module instantiations
 	vgaHDMI_core m0
